@@ -1,0 +1,139 @@
+
+entity Region {
+	regionName String
+}
+
+entity Country {
+	countryName String
+}
+
+// an ignored comment
+/** not an ignored comment */
+entity Location {
+	streetAddress String,
+	postalCode String,
+	city String,
+	stateProvince String
+}
+
+entity Employee {
+  firstName String required,
+  lastName String required,
+  email String required,
+  phoneNumber String,
+  hireDate Instant,
+  salary Long,
+  commissionPct Long
+}
+
+
+entity Department {
+  departmentName String required,
+  description String
+}
+
+entity Customer {
+  firstName String required,
+  lastName String required,
+  email String required,
+  phoneNumber String,
+  customerType CustomerType required
+}
+
+entity Job {
+  jobTitle String required,
+  description String,
+  cost Long
+}
+
+entity JobHistory {
+	startDate Instant,
+	endDate Instant,
+	language Language
+}
+
+entity Task {
+  title String required,
+  description String,
+  dueDate Instant,
+  status TaskStatus
+}
+
+enum TaskStatus {
+  TODO, IN_PROGRESS, COMPLETED
+}
+
+enum CustomerType {
+  RESIDENTIAL, COMMERCIAL
+}
+
+// Define relationships
+relationship OneToOne {
+  Manager{department} to Department
+}
+
+relationship ManyToOne {
+  Employee{department} to Department,
+  Task{assignee} to Employee,
+  Task{job} to Job
+}
+
+relationship ManyToMany {
+  Employee{managedTeams} to Department{managers},
+  Employee{tasks} to Task{assignees},
+  Customer{assignedTasks} to Task{customers}
+}
+
+
+
+/**
+ * Task entity.
+ * @author The JHipster team.
+ */
+
+
+/**
+ * The Employee entity.
+ */
+
+
+
+
+
+enum Language {
+    ENGLISH, SPANISH
+}
+
+relationship OneToOne {
+	Country{region} to Region
+}
+
+relationship OneToOne {
+	Location{country} to Country
+}
+
+relationship OneToOne {
+	Department{location} to Location
+}
+
+// defining multiple OneToMany relationships with comments
+
+// defining multiple oneToOne relationships
+relationship OneToOne {
+	JobHistory{job} to Job,
+	JobHistory{department} to Department,
+	JobHistory{employee} to Employee
+}
+
+// Set pagination options
+paginate JobHistory, Employee with infinite-scroll
+paginate Job with pagination
+
+// Use Data Transfer Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl except Employee, Job
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
